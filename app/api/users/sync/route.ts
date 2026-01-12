@@ -1,7 +1,7 @@
 // app/api/users/sync/route.ts
 import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/db/index";
-import { users } from "@/db/schema";
+import { user } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -45,8 +45,8 @@ export async function POST() {
     // 3. Check if user already exists in database
     const existingUser = await db
       .select()
-      .from(users)
-      .where(eq(users.id, clerkUser.id))
+      .from(user)
+      .where(eq(user.id, clerkUser.id))
       .limit(1);
 
     // 4. If user exists, return the existing user
@@ -83,7 +83,7 @@ export async function POST() {
     });
 
     // 6. Insert new user (no onConflict needed since we checked existence)
-    const [newUser] = await db.insert(users).values(userData).returning();
+    const [newUser] = await db.insert(user).values(userData).returning();
 
     console.log("✅ New user created in database");
 
