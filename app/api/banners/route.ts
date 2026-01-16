@@ -1,21 +1,10 @@
-// app/api/products/route.ts
 import { db } from "@/db";
-import { insertProductSchema, product } from "@/db/schema";
+import { banner, insertBannerSchema } from "@/db/schema";
+import { currentUser } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
-import { z } from "zod";
+import z from "zod";
 
-// Simple helper to generate slug
-function generateSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-// SIMPLE: Check if user is admin
 async function isAdminUser(): Promise<boolean> {
   try {
     // 1. Get current user from Clerk
@@ -55,32 +44,24 @@ async function isAdminUser(): Promise<boolean> {
   }
 }
 
-// POST: Create new product (Admin only)
+//POST add new banner
 export async function POST(request: Request) {
   try {
-    console.log("📥 Received request to create product");
-
-    // SIMPLE CHECK: Is user admin?
     const isAdmin = await isAdminUser();
-
     if (!isAdmin) {
       return NextResponse.json(
         {
           success: false,
-          message: "Only admin can create products",
+          message: "User not authorized",
         },
         { status: 403 }
       );
     }
-
     console.log("✅ Admin verified, creating product...");
-
-    // Parse request body
     const body = await request.json();
-
     let validatedData;
     try {
-      validatedData = insertProductSchema.parse(body);
+      validatedData = insertBannerSchema.parse(body);
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         console.log("❌ Zod validation failed:", error);
@@ -104,50 +85,37 @@ export async function POST(request: Request) {
       throw error;
     }
 
-    const { name, description, price, images, status, category, featured } =
-      validatedData;
+    const { name, image } = validatedData;
 
-    const existingProductByName = await db
+    const existingBannerByName = await db
       .select()
-      .from(product)
-      .where(eq(product.name, name.trim()))
+      .from(banner)
+      .where(eq(banner.name, name.trim()))
       .limit(1);
 
-    if (existingProductByName.length > 0) {
+    if (existingBannerByName.length > 0) {
       return NextResponse.json(
         {
           success: false,
-          message: "A product with this name already exists",
+          message: "A banner with this name already exists",
         },
         { status: 409 } // Conflict status code
       );
     }
 
-    // Generate slug
-    const slug = generateSlug(name);
-
-    // Create product
-    const [newProduct] = await db
-      .insert(product)
-      .values({
-        name: name.trim(),
-        slug: slug,
-        description: description?.trim() || null,
-        price: price.toString(),
-        images: images || [],
-        status: status || "draft",
-        category: category || "men",
-        featured: featured || false,
-      })
+    //add new banner
+    const [newBanner] = await db
+      .insert(banner)
+      .values({ name: name.trim(), image: image })
       .returning();
 
-    console.log("✅ Product created:", newProduct.name);
+    console.log("✅ Product created:", newBanner.name);
 
     return NextResponse.json(
       {
         success: true,
-        message: "Product created",
-        product: newProduct,
+        message: "Banner added",
+        product: newBanner,
       },
       { status: 201 }
     );
@@ -159,7 +127,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Product with this name already exists",
+          message: "Banner with this name already exists",
         },
         { status: 400 }
       );
@@ -175,19 +143,20 @@ export async function POST(request: Request) {
   }
 }
 
-// GET: Get all products (Public)
 export async function GET() {
   try {
-    const products = await db.select().from(product).orderBy(product.createdAt);
-
+    const banners = await db.select().from(banner);
     return NextResponse.json({
       success: true,
-      products,
+      banners,
     });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error", error);
     return NextResponse.json(
-      { success: false, message: "Failed to get products" },
+      {
+        success: false,
+        message: "Failed to get banners",
+      },
       { status: 500 }
     );
   }

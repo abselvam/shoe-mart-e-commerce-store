@@ -86,6 +86,7 @@ export const insertProductSchema = createInsertSchema(product, {
     ProductStatus.PUBLISHED,
     ProductStatus.ARCHIVED,
   ]),
+  category: z.enum([Category.MEN, Category.WOMEN, Category.KIDS]),
 }).omit({
   id: true,
   createdAt: true,
@@ -95,3 +96,20 @@ export const insertProductSchema = createInsertSchema(product, {
 
 // Update schema (same as insert but all fields optional)
 export const updateProductSchema = insertProductSchema.partial();
+
+//banner schema
+export const banner = pgTable("Banner", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  image: text("image").notNull(),
+});
+
+//banner zod schema
+export const insertBannerSchema = createInsertSchema(banner, {
+  name: z.string().min(1, "Name is required").max(100),
+  image: z.string().url("Must be a valid image URL"),
+}).omit({
+  id: true,
+});
