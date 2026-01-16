@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import crypto from "crypto";
 
 // Users table - Syncs with Clerk user data
 export const user = pgTable("User", {
@@ -63,6 +64,10 @@ export const product = pgTable("Product", {
     .default(Category.MEN),
   featured: boolean("featured").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
 });
 
 // Types
@@ -84,6 +89,8 @@ export const insertProductSchema = createInsertSchema(product, {
 }).omit({
   id: true,
   createdAt: true,
+  updatedAt: true,
+  slug: true,
 });
 
 // Update schema (same as insert but all fields optional)

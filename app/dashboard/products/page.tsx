@@ -132,7 +132,7 @@ export default function ProductsPage() {
     if (!confirm(`Are you sure you want to delete "${productName}"?`)) return;
 
     try {
-      const response = await fetch(`/api/products?id=${productId}`, {
+      const response = await fetch(`/api/products/${productId}`, {
         method: "DELETE",
       });
 
@@ -211,12 +211,12 @@ export default function ProductsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-20">Image</TableHead>
+                    <TableHead className="w-24 text-left">Image</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Category</TableHead>
-                    <TableHead>Featured</TableHead>
+                    <TableHead className="pl-5">Featured</TableHead>
                     <TableHead>Created</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -256,11 +256,15 @@ export default function ProductsPage() {
                       </TableCell>
                       <TableCell>
                         {product.featured ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                            Featured
-                          </span>
+                          <div className="px-2">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-200 text-purple-900">
+                              Featured
+                            </span>
+                          </div>
                         ) : (
-                          <span className="text-gray-400 text-xs">—</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[0.7rem] font-medium bg-gray-200 text-gray-600">
+                            Not Featured
+                          </span>
                         )}
                       </TableCell>
                       <TableCell className="text-sm text-gray-500">
@@ -284,7 +288,7 @@ export default function ProductsPage() {
                               </DropdownMenuItem>
                             </Link>
                             <Link
-                              href={`/dashboard/products/edit/${product.id}`}
+                              href={`/dashboard/products/${product.id}/edit`}
                             >
                               <DropdownMenuItem>
                                 <Edit className="w-4 h-4 mr-2" />

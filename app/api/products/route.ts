@@ -14,29 +14,6 @@ function generateSlug(name: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-// Simple helper to get unique slug
-async function getUniqueSlug(baseSlug: string): Promise<string> {
-  let slug = baseSlug;
-  let counter = 1;
-
-  while (true) {
-    const existing = await db
-      .select()
-      .from(product)
-      .where(eq(product.slug, slug))
-      .limit(1);
-
-    if (existing.length === 0) return slug;
-
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-
-    if (counter > 100) {
-      throw new Error("Could not generate unique slug");
-    }
-  }
-}
-
 // SIMPLE: Check if user is admin
 async function isAdminUser(): Promise<boolean> {
   try {
@@ -129,15 +106,14 @@ export async function POST(request: Request) {
     }
 
     // Generate slug
-    const baseSlug = generateSlug(name);
-    const uniqueSlug = await getUniqueSlug(baseSlug);
+    const slug = generateSlug(name);
 
     // Create product
     const [newProduct] = await db
       .insert(product)
       .values({
         name: name.trim(),
-        slug: uniqueSlug,
+        slug: slug,
         description: description?.trim() || null,
         price: price.toString(),
         images: images || [],
@@ -194,64 +170,6 @@ export async function GET() {
     console.error("Error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to get products" },
-      { status: 500 }
-    );
-  }
-}
-
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
-
-export async function DELETE(request: Request) {
-  try {
-    // Check if user is admin
-    const isAdmin = await isAdminUser();
-    if (!isAdmin) {
-      return NextResponse.json(
-        { success: false, message: "Only admin can delete products" },
-        { status: 403 }
-      );
-    }
-
-    // Get the ID from query parameters
-    const url = new URL(request.url);
-    const id = url.searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json(
-        { success: false, message: "Product ID is required" },
-        { status: 400 }
-      );
-    }
-
-    // Check if product exists
-    const [existingProduct] = await db
-      .select()
-      .from(product)
-      .where(eq(product.id, id))
-      .limit(1);
-
-    if (!existingProduct) {
-      return NextResponse.json(
-        { success: false, message: "Product not found" },
-        { status: 404 }
-      );
-    }
-
-    // Delete product
-    await db.delete(product).where(eq(product.id, id));
-
-    return NextResponse.json({
-      success: true,
-      message: "Product deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to delete product" },
       { status: 500 }
     );
   }
