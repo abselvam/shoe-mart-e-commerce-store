@@ -1,4 +1,9 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { DashboardNavigation } from "./DashboardNavigation";
 import { Button } from "@/components/ui/button";
 import { CircleUser, MenuIcon } from "lucide-react";
@@ -11,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SignOutButton } from "@clerk/nextjs";
+import { DarkModeToggle } from "../DarkModeToggle";
 
 export default function DashboardNavbar() {
   return (
@@ -24,26 +30,31 @@ export default function DashboardNavbar() {
             <MenuIcon className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left">
-          <nav className="flex flex-col gap-6 text-lg font-medium mt-7 ml-10">
-            <DashboardNavigation />
-          </nav>
-        </SheetContent>
+        <SheetTitle>
+          <SheetContent side="left">
+            <nav className="flex flex-col gap-6 text-lg font-medium mt-7 ml-10">
+              <DashboardNavigation />
+            </nav>
+          </SheetContent>
+        </SheetTitle>
       </Sheet>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <CircleUser className="w-5 h-5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <SignOutButton>Logout</SignOutButton>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex gap-6">
+        <DarkModeToggle />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" className="rounded-full ">
+              <CircleUser className="w-5 h-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <SignOutButton>Logout</SignOutButton>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

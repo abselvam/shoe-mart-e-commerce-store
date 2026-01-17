@@ -51,7 +51,7 @@ export function StoreNavLinks({ isAdmin = false }: { isAdmin?: boolean }) {
             key={link.href}
             href={link.href}
             className={cn(
-              "text-black font-semibold hover:cursor-pointer m-8 transition-all duration-200",
+              "text-accent-foreground font-semibold hover:cursor-pointer m-4 transition-all duration-200",
               isActive
                 ? "underline text-primary"
                 : "hover:underline hover:text-primary"
