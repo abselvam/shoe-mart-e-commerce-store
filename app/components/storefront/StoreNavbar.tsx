@@ -27,7 +27,7 @@ export default async function StoreNavbar() {
   const isAdmin = userEmail === adminEmail;
 
   return (
-    <div className="sticky top-0 flex h-24 items-center justify-between gap-4 border-b bg-card px-6">
+    <div className="sticky top-0 flex h-24 items-center justify-between gap-4 border-b bg-card px-6 z-50">
       <div className="hidden md:flex justify-center items-center">
         <div className="flex flex-col">
           <Link href={"/"}>
@@ -52,13 +52,13 @@ export default async function StoreNavbar() {
               <MenuIcon className="h-5 w-5 " />
             </Button>
           </SheetTrigger>
-          <SheetTitle>
-            <SheetContent side="left">
+          <SheetContent side="left">
+            <SheetTitle>
               <nav className="flex flex-col gap-6 text-lg font-medium mt-7 ml-10">
                 <StoreNavLinks isAdmin={isAdmin} />
               </nav>
-            </SheetContent>
-          </SheetTitle>
+            </SheetTitle>
+          </SheetContent>
         </Sheet>
         <div className="flex flex-col ml-3">
           <Link href={"/"}>

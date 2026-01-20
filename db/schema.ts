@@ -104,6 +104,7 @@ export const banner = pgTable("Banner", {
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   image: text("image").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 //banner zod schema
@@ -112,4 +113,5 @@ export const insertBannerSchema = createInsertSchema(banner, {
   image: z.string().url("Must be a valid image URL"),
 }).omit({
   id: true,
+  createdAt: true,
 });

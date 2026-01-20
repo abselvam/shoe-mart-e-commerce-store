@@ -69,7 +69,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Only admin can create products",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
             message: "Validation failed",
             errors: formattedErrors,
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
       throw error;
@@ -119,7 +119,7 @@ export async function POST(request: Request) {
           success: false,
           message: "A product with this name already exists",
         },
-        { status: 409 } // Conflict status code
+        { status: 409 }, // Conflict status code
       );
     }
 
@@ -149,7 +149,7 @@ export async function POST(request: Request) {
         message: "Product created",
         product: newProduct,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error: any) {
     console.error("Error:", error);
@@ -161,7 +161,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Product with this name already exists",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -170,7 +170,7 @@ export async function POST(request: Request) {
         success: false,
         message: "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -188,7 +188,7 @@ export async function GET() {
     console.error("Error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to get products" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

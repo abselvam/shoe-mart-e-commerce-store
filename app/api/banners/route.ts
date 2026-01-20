@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { banner, insertBannerSchema } from "@/db/schema";
 import { currentUser } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import z from "zod";
 
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
           success: false,
           message: "User not authorized",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
     console.log("✅ Admin verified, creating product...");
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
             message: "Validation failed",
             errors: formattedErrors,
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
       throw error;
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
           success: false,
           message: "A banner with this name already exists",
         },
-        { status: 409 } // Conflict status code
+        { status: 409 }, // Conflict status code
       );
     }
 
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
         message: "Banner added",
         product: newBanner,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error: any) {
     console.error("Error:", error);
@@ -129,7 +129,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Banner with this name already exists",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -138,14 +138,17 @@ export async function POST(request: Request) {
         success: false,
         message: "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function GET() {
   try {
-    const banners = await db.select().from(banner);
+    const banners = await db
+      .select()
+      .from(banner)
+      .orderBy(desc(banner.createdAt));
     return NextResponse.json({
       success: true,
       banners,
@@ -157,7 +160,7 @@ export async function GET() {
         success: false,
         message: "Failed to get banners",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

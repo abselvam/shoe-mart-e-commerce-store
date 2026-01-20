@@ -17,7 +17,7 @@ export default async function PublicLayout({
   return (
     <>
       <StoreNavbar />
-      <div className="flex w-full flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex w-full flex-col max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="my-5">{children}</main>
       </div>
     </>
