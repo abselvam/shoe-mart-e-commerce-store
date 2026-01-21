@@ -25,7 +25,7 @@ function ProductClientView({ productId }: { productId: string }) {
   async function fetchProduct() {
     try {
       setLoading(true);
-      const response = await fetch(`/api/products/${productId}`);
+      const response = await fetch(`/api/product/${productId}`);
       const data = await response.json();
 
       if (data.success) {

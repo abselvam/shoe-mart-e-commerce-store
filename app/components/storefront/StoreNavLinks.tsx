@@ -15,15 +15,15 @@ const links = [
   },
   {
     name: "Men",
-    href: "/men",
+    href: "/products/men",
   },
   {
     name: "Women",
-    href: "/women",
+    href: "/products/women",
   },
   {
     name: "Kids",
-    href: "/kids",
+    href: "/products/kids",
   },
 ];
 
@@ -54,7 +54,7 @@ export function StoreNavLinks({ isAdmin = false }: { isAdmin?: boolean }) {
               "text-accent-foreground font-semibold hover:cursor-pointer m-4 transition-all duration-200",
               isActive
                 ? "underline text-primary"
-                : "hover:underline hover:text-primary"
+                : "hover:underline hover:text-primary",
             )}
           >
             {link.name}

@@ -66,7 +66,7 @@ export default function EditProductPage() {
       setFetching(true);
       try {
         console.log("📡 Fetching product with ID:", productId);
-        const response = await fetch(`/api/products/${productId}`);
+        const response = await fetch(`/api/product/${productId}`);
         console.log("API Response status:", response.status);
 
         if (!response.ok) {
@@ -102,7 +102,7 @@ export default function EditProductPage() {
         setError(
           `Failed to load product data: ${
             error instanceof Error ? error.message : "Unknown error"
-          }`
+          }`,
         );
       } finally {
         setFetching(false);
