@@ -1,7 +1,7 @@
 // app/api/products/route.ts
 import { db } from "@/db";
 import { insertProductSchema, product } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
@@ -178,7 +178,10 @@ export async function POST(request: Request) {
 // GET: Get all products (Public)
 export async function GET() {
   try {
-    const products = await db.select().from(product).orderBy(product.createdAt);
+    const products = await db
+      .select()
+      .from(product)
+      .orderBy(desc(product.createdAt));
 
     return NextResponse.json({
       success: true,

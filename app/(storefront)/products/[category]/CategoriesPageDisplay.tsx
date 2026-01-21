@@ -68,17 +68,18 @@ function CategoriesPageDisplay({ category }: { category: string }) {
       <h1 className="text-3xl text-foreground my-6 font-bold">
         {categoryName}
       </h1>
-      <div className="px-10 mt-15 flex grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="px-30 mt-15 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-content-center">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            params={{
-              name: product.name,
-              image: product.images[0],
-              price: product.price,
-              slug: product.slug,
-            }}
-          />
+          <div key={product.id} className="my-4">
+            <ProductCard
+              params={{
+                name: product.name,
+                image: product.images[0],
+                price: product.price,
+                slug: product.slug,
+              }}
+            />
+          </div>
         ))}
       </div>
     </div>

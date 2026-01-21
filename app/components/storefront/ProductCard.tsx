@@ -15,7 +15,7 @@ interface Product {
 function ProductCard({ params }: { params: Product }) {
   return (
     <Link href={`/productpage/${params.slug}`}>
-      <Card className="overflow-hidden w-80 h-120 hover:cursor-pointer py-0 gap-3">
+      <Card className="overflow-hidden w-90 h-120 hover:cursor-pointer py-0 gap-3">
         <div className="relative min-h-90">
           <Image
             src={params.image}
