@@ -128,13 +128,18 @@ export default function CreateProductPage() {
             {/* UPDATED: Added value and onChange */}
             <div className="flex flex-col gap-3">
               <Label>Description</Label>
+              <span className="text-sm text-muted-foreground">
+                {formData.description?.length || 0}/250
+              </span>
               <Textarea
                 className="w-full"
                 placeholder="Write description for the product..."
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
+                onChange={(e) => {
+                  if (e.target.value.length <= 250) {
+                    setFormData({ ...formData, description: e.target.value });
+                  }
+                }}
                 rows={4}
               />
             </div>

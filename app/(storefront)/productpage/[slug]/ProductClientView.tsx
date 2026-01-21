@@ -63,13 +63,13 @@ function ProductClientView({ productId }: { productId: string }) {
         {/* Left - Image Gallery */}
         <div className="flex gap-4 w-180 h-130">
           {/* Thumbnail Column */}
-          <Card className="flex flex-col gap-2 p-3">
+          <Card className="flex flex-col gap-3 p-3">
             {product.images.map((image, index) => (
               <Button
                 key={index}
                 onClick={() => setSelectedImage(index)}
                 className={`relative h-16 w-16 rounded-md overflow-hidden border ${
-                  selectedImage === index ? "border-primary" : "border-gray-200"
+                  selectedImage === index ? "border-primary" : "border-gray-600"
                 }`}
               >
                 <Image
@@ -84,7 +84,7 @@ function ProductClientView({ productId }: { productId: string }) {
 
           {/* Main Image */}
           <Card className="flex w-180">
-            <CardContent className="p-4">
+            <CardContent className="py-8">
               <div className="relative h-100">
                 <Image
                   src={product.images[selectedImage]}
@@ -115,11 +115,9 @@ function ProductClientView({ productId }: { productId: string }) {
                 </p>
 
                 {product.description && (
-                  <div>
-                    <p className="text-secondary-foreground">
-                      {product.description}
-                    </p>
-                  </div>
+                  <p className="text-secondary-foreground">
+                    {product.description}
+                  </p>
                 )}
               </div>
             </CardContent>

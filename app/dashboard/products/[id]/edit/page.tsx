@@ -120,7 +120,7 @@ export default function EditProductPage() {
     try {
       console.log("🔄 Submitting update for product:", productId);
 
-      const response = await fetch(`/api/products/${productId}`, {
+      const response = await fetch(`/api/product/${productId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -217,13 +217,18 @@ export default function EditProductPage() {
 
             <div className="flex flex-col gap-3">
               <Label>Description</Label>
+              <span className="text-sm text-muted-foreground">
+                {formData.description?.length || 0}/250
+              </span>
               <Textarea
                 className="w-full"
                 placeholder="Write description for the product..."
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
+                onChange={(e) => {
+                  if (e.target.value.length <= 250) {
+                    setFormData({ ...formData, description: e.target.value });
+                  }
+                }}
                 rows={4}
                 disabled={loading}
               />
