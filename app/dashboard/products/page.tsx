@@ -132,7 +132,7 @@ export default function ProductsPage() {
     if (!confirm(`Are you sure you want to delete "${productName}"?`)) return;
 
     try {
-      const response = await fetch(`/api/products/${productId}`, {
+      const response = await fetch(`/api/product/${productId}`, {
         method: "DELETE",
       });
 
