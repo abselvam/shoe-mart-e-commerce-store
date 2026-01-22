@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { ReactNode } from "react";
 import StoreNavbar from "@/app/components/storefront/StoreNavbar";
+import Footer from "../components/storefront/Footer";
 
 export default async function PublicLayout({
   children,
@@ -20,6 +21,7 @@ export default async function PublicLayout({
       <div className="flex w-full flex-col max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="my-5">{children}</main>
       </div>
+      <Footer />
     </>
   );
 }

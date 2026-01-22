@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ProductCard from "./ProductCard";
 import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
 import { smoothScroll } from "@/app/utils/smoothScroll";
+import Link from "next/link";
 
 interface FeaturedProducts {
   id: string;
@@ -60,6 +61,12 @@ function FeaturedProducts() {
           <span className="text-primary">Featured </span>Products
         </h2>
         <div className="flex gap-7 text-primary">
+          <Link
+            href={"/featured"}
+            className="text-lg text-primary hover:underline"
+          >
+            See all
+          </Link>
           <ChevronLeftCircle
             onClick={scrollLeft}
             className=" hover:cursor-pointer hover:text-primary/80"
