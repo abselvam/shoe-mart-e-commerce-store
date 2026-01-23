@@ -31,9 +31,6 @@ function ProductCard({ params }: { params: Product }) {
               ${params.price}
             </p>
           </div>
-          <Button className="bg-primary text-primary-foreground rounded-full ml-4 h-10 w-10">
-            <ShoppingBag />
-          </Button>
         </div>
       </Card>
     </Link>

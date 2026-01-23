@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -16,11 +17,25 @@ interface Product {
   slug: string;
 }
 
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  images: string[];
+  description?: string;
+  category: string;
+  slug: string;
+  variant?: string;
+  quantity: number;
+}
+
 function ProductClientView({ productId }: { productId: string }) {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const router = useRouter();
 
   async function fetchProduct() {
     try {
@@ -39,6 +54,41 @@ function ProductClientView({ productId }: { productId: string }) {
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function addToCart() {
+    if (!product) return;
+
+    setAddingToCart(true);
+    try {
+      // Prepare product data for cart
+      const cartProduct: Omit<CartItem, "quantity"> = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        images: product.images,
+        description: product.description,
+        category: product.category,
+        slug: product.slug,
+      };
+
+      const response = await fetch("/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          product: cartProduct,
+          quantity: 1, // Default quantity
+        }),
+      });
+
+      const data = await response.json();
+    } catch (error) {
+      console.error("Add to cart error:", error);
+    } finally {
+      setAddingToCart(false);
     }
   }
 
@@ -122,9 +172,19 @@ function ProductClientView({ productId }: { productId: string }) {
               </div>
             </CardContent>
             <div className="flex flex-col justify-end gap-4 h-full px-10 py-2">
-              <Button className="w-full py-6 text-lg bg-secondary-foreground hover:bg-secondary-foreground/80">
-                Add to Bag
-                <ShoppingBag className="text-primary-foreground ml-4" />
+              <Button
+                className="w-full py-6 text-lg bg-secondary-foreground hover:bg-secondary-foreground/80"
+                onClick={addToCart}
+                disabled={addingToCart}
+              >
+                {addingToCart ? (
+                  "Adding..."
+                ) : (
+                  <>
+                    Add to Bag
+                    <ShoppingBag className="text-primary-foreground ml-4" />
+                  </>
+                )}
               </Button>
               <Button className="w-full py-6 text-lg">Buy Now</Button>
             </div>

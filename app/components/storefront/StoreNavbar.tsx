@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SignInButton, SignOutButton, SignUpButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
-import { CircleUser, MenuIcon, ShoppingBag, Sun } from "lucide-react";
+import { CircleUser, MenuIcon } from "lucide-react";
 import { StoreNavLinks } from "./StoreNavLinks";
 import Link from "next/link";
 import { DarkModeToggle } from "../DarkModeToggle";
@@ -19,6 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { CartSheet } from "@/app/components/storefront/CartSheet"; // Import the new component
 
 export default async function StoreNavbar() {
   const user = await currentUser();
@@ -72,7 +73,7 @@ export default async function StoreNavbar() {
 
       <div>
         {!user ? (
-          <div className=" flex justify-center items-center gap-5">
+          <div className="flex justify-center items-center gap-5">
             <Button asChild>
               <SignUpButton>Sign Up</SignUpButton>
             </Button>
@@ -100,9 +101,9 @@ export default async function StoreNavbar() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <div className="rounded-full bg-primary p-2 hover:cursor-pointer hover:bg-primary/80">
-              <ShoppingBag className="text-primary-foreground h-6 w-6" />
-            </div>
+
+            {/* Use the CartSheet component */}
+            <CartSheet />
           </div>
         )}
       </div>

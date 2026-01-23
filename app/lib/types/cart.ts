@@ -5,7 +5,6 @@ export interface CartItem {
   price: number;
   quantity: number;
   image?: string;
-  variant?: string;
   addedAt?: string; // When item was added to cart
 }
 
