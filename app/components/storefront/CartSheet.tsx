@@ -31,7 +31,7 @@ export function CartSheet() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cart, setCart] = useState<Cart>({ items: [] });
-  const { totalItems, refreshCart, fetchCartCount } = useCartStore();
+  const { totalItems, fetchCartCount } = useCartStore();
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export function CartSheet() {
 
       if (response.ok) {
         fetchCart(); // Refresh cart
-        refreshCart(); // Also refresh the global cart store
+        fetchCartCount(); // Also refresh the global cart store
       }
     } catch (error) {
       console.error("Failed to remove item:", error);

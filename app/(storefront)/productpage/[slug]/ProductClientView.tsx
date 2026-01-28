@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -30,14 +29,21 @@ interface CartItem {
   quantity: number;
 }
 
-function ProductClientView({ productId }: { productId: string }) {
+interface Props {
+  productId: string;
+  slug: string;
+}
+
+function ProductClientView({ productId, slug }: Props) {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
-  const router = useRouter();
-  const refreshCart = useCartStore((state) => state.refreshCart);
+  const itemCount = useCartStore((state) => state.fetchCartCount);
+  const thisItemCount = useCartStore((state) => state.thisItemCount);
+  const specificItemCount = useCartStore((state) => state.specificItemCount);
+  const [isClicked, setIsClicked] = useState<boolean>(false);
 
   async function fetchProduct() {
     try {
@@ -87,7 +93,7 @@ function ProductClientView({ productId }: { productId: string }) {
       });
 
       if (response.ok) {
-        await refreshCart();
+        await itemCount();
       }
 
       const data = await response.json();
@@ -103,6 +109,17 @@ function ProductClientView({ productId }: { productId: string }) {
       fetchProduct();
     }
   }, [productId]);
+
+  useEffect(() => {
+    if (slug) {
+      thisItemCount(slug);
+    }
+  }, [slug]);
+
+  const handleAddToCart = async () => {
+    await addToCart();
+    setIsClicked(true);
+  };
 
   if (loading)
     return (
@@ -180,14 +197,16 @@ function ProductClientView({ productId }: { productId: string }) {
             <div className="flex flex-col justify-end gap-4 h-full px-10 py-2">
               <Button
                 className="w-full py-6 text-lg bg-secondary-foreground hover:bg-secondary-foreground/80"
-                onClick={addToCart}
-                disabled={addingToCart}
+                onClick={handleAddToCart}
+                disabled={addingToCart || isClicked}
               >
                 {addingToCart ? (
                   "Adding..."
+                ) : isClicked ? ( // Changed this line
+                  <>({specificItemCount} in cart)</> // Use specificItemCount here
                 ) : (
                   <>
-                    Add to Bag
+                    Add to Bag {/* Show count even before clicking */}
                     <ShoppingBag className="text-primary-foreground ml-4" />
                   </>
                 )}
