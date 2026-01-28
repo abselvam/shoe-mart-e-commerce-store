@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { itemId, variant } = await request.json();
+    const { itemId } = await request.json();
 
     if (!itemId) {
       return NextResponse.json(
@@ -31,9 +31,7 @@ export async function POST(request: NextRequest) {
     const cart = await getCart(userId);
 
     // Filter out the item to remove
-    const updatedItems = cart.items.filter(
-      (item) => !(item.id === itemId && (!variant || item.variant === variant)),
-    );
+    const updatedItems = cart.items.filter((item) => !(item.id === itemId));
 
     // Check if item was actually found and removed
     const itemRemoved = cart.items.length !== updatedItems.length;
@@ -43,7 +41,6 @@ export async function POST(request: NextRequest) {
         {
           error: "Item not found in cart",
           itemId,
-          variant,
         },
         { status: 404 },
       );
@@ -61,7 +58,7 @@ export async function POST(request: NextRequest) {
       success: true,
       cart: updatedCart,
       message: "Item removed from cart",
-      removedItem: { itemId, variant },
+      removedItem: { itemId },
     });
   } catch (error) {
     console.error("Remove from cart error:", error);

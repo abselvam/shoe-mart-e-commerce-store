@@ -1,5 +1,6 @@
 "use client";
 
+import { useCartStore } from "@/app/store/cartStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag } from "lucide-react";
@@ -36,6 +37,7 @@ function ProductClientView({ productId }: { productId: string }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
   const router = useRouter();
+  const refreshCart = useCartStore((state) => state.refreshCart);
 
   async function fetchProduct() {
     try {
@@ -83,6 +85,10 @@ function ProductClientView({ productId }: { productId: string }) {
           quantity: 1, // Default quantity
         }),
       });
+
+      if (response.ok) {
+        await refreshCart();
+      }
 
       const data = await response.json();
     } catch (error) {

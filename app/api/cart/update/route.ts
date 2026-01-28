@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { itemId, quantity, variant } = await request.json();
+    const { itemId, quantity } = await request.json();
 
     // Validation
     if (!itemId || quantity === undefined) {
@@ -47,16 +47,13 @@ export async function POST(request: NextRequest) {
     const cart = await getCart(userId);
 
     // Find the item
-    const itemIndex = cart.items.findIndex(
-      (item) => item.id === itemId && (!variant || item.variant === variant),
-    );
+    const itemIndex = cart.items.findIndex((item) => item.id === itemId);
 
     if (itemIndex === -1) {
       return NextResponse.json(
         {
           error: "Item not found in cart",
           itemId,
-          variant,
         },
         { status: 404 },
       );
@@ -92,7 +89,7 @@ export async function POST(request: NextRequest) {
           ? "Item removed from cart"
           : "Quantity updated successfully",
       action: quantity === 0 ? "removed" : "updated",
-      updatedItem: { itemId, variant, quantity },
+      updatedItem: { itemId, quantity },
     });
   } catch (error) {
     console.error("Update cart error:", error);
