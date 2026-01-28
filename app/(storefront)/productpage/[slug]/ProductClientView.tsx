@@ -111,9 +111,7 @@ function ProductClientView({ productId, slug }: Props) {
   }, [productId]);
 
   useEffect(() => {
-    if (slug) {
-      thisItemCount(slug);
-    }
+    thisItemCount(slug);
   }, [slug]);
 
   const handleAddToCart = async () => {
@@ -202,8 +200,8 @@ function ProductClientView({ productId, slug }: Props) {
               >
                 {addingToCart ? (
                   "Adding..."
-                ) : isClicked ? ( // Changed this line
-                  <>({specificItemCount} in cart)</> // Use specificItemCount here
+                ) : specificItemCount > 0 ? ( // Changed this line
+                  <>{specificItemCount} in cart</> // Use specificItemCount here
                 ) : (
                   <>
                     Add to Bag {/* Show count even before clicking */}
