@@ -119,10 +119,34 @@ export default function CheckoutPage() {
     fetchItems();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For online payments - implement later
-    setError("Online payment is not implemented yet");
+
+    // Validate form
+    if (!validateForm()) {
+      setError("Please fix the errors in the form");
+      return;
+    }
+
+    if (cart.items.length === 0) {
+      setError("Your cart is empty");
+      return;
+    }
+
+    // Store form data and cart in localStorage for the payment page
+    const checkoutData = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      items: cart.items,
+      totalPrice: totalPrice,
+    };
+
+    localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
+
+    // Redirect to payment page with amount
+    router.push(`/checkout/payment?amount=${totalPrice}`);
   };
 
   const handleSubmitCod = async (e: React.FormEvent) => {
