@@ -115,3 +115,65 @@ export const insertBannerSchema = createInsertSchema(banner, {
   id: true,
   createdAt: true,
 });
+
+export const PaymentMethod = {
+  COD: "cod",
+  ONLINE: "online",
+} as const;
+
+export type PaymentMethodType =
+  (typeof PaymentMethod)[keyof typeof PaymentMethod];
+
+// Define the structure for order items
+export interface OrderItem {
+  id: string;
+  name: string;
+  price: number; // Price per unit
+  quantity: number;
+  images?: string[];
+}
+
+export const order = pgTable("Order", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId").notNull(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  address: text("address"),
+  totalPrice: decimal("totalPrice", { precision: 10, scale: 2 }).notNull(),
+  paymentMethod: text("paymentMethod") // Fixed typo: "payementMethod" → "paymentMethod"
+    .$type<PaymentMethodType>()
+    .notNull()
+    .default(PaymentMethod.ONLINE),
+  items: json("items").$type<OrderItem[]>().default([]),
+  createdAt: timestamp("created_at").defaultNow().notNull(), // Fixed: Added proper type
+});
+
+// Types
+export type Order = typeof order.$inferSelect;
+export type NewOrder = typeof order.$inferInsert;
+
+// Zod schema for order validation (if needed)
+export const insertOrderSchema = createInsertSchema(order, {
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email"),
+  phone: z.string().min(10, "Phone number is required"),
+  address: z.string().min(10, "Address is required"),
+  totalPrice: z.number().positive("Total price must be positive"),
+  paymentMethod: z.enum([PaymentMethod.COD, PaymentMethod.ONLINE]),
+  items: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      price: z.number().positive(),
+      quantity: z.number().int().positive(),
+      images: z.array(z.string()).optional(),
+    }),
+  ),
+}).omit({
+  id: true,
+  createdAt: true,
+  userId: true,
+});

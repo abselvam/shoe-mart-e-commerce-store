@@ -31,19 +31,15 @@ interface CartItem {
 
 interface Props {
   productId: string;
-  slug: string;
 }
 
-function ProductClientView({ productId, slug }: Props) {
+function ProductClientView({ productId }: Props) {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
   const itemCount = useCartStore((state) => state.fetchCartCount);
-  const thisItemCount = useCartStore((state) => state.thisItemCount);
-  const specificItemCount = useCartStore((state) => state.specificItemCount);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
 
   async function fetchProduct() {
     try {
@@ -110,13 +106,8 @@ function ProductClientView({ productId, slug }: Props) {
     }
   }, [productId]);
 
-  useEffect(() => {
-    thisItemCount(slug);
-  }, [slug]);
-
   const handleAddToCart = async () => {
     await addToCart();
-    setIsClicked(true);
   };
 
   if (loading)
@@ -196,12 +187,10 @@ function ProductClientView({ productId, slug }: Props) {
               <Button
                 className="w-full py-6 text-lg bg-secondary-foreground hover:bg-secondary-foreground/80"
                 onClick={handleAddToCart}
-                disabled={addingToCart || isClicked}
+                disabled={addingToCart}
               >
                 {addingToCart ? (
                   "Adding..."
-                ) : specificItemCount > 0 ? ( // Changed this line
-                  <>{specificItemCount} in cart</> // Use specificItemCount here
                 ) : (
                   <>
                     Add to Bag {/* Show count even before clicking */}

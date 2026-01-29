@@ -27,5 +27,5 @@ export default async function ProductPage({
   const productId = result[0].id;
 
   // 3. Pass to client component
-  return <ProductClientView productId={productId} slug={slug} />;
+  return <ProductClientView productId={productId} />;
 }

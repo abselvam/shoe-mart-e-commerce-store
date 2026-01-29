@@ -61,7 +61,7 @@ function ShopByCategory() {
         {/* Small Cards - Men & Women */}
         <div className="lg:w-1/2 flex flex-col gap-6 h-full">
           {/* Men's Card */}
-          <Link href="/product/men" className="flex-1 h-full">
+          <Link href="/products/men" className="flex-1 h-full">
             <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 p-0 flex-1 h-full">
               <div className="relative w-full h-full">
                 <Image
@@ -80,7 +80,7 @@ function ShopByCategory() {
           </Link>
 
           {/* Women's Card */}
-          <Link href="/product/women" className="flex-1 h-full">
+          <Link href="/products/women" className="flex-1 h-full">
             <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 p-0 flex-1 h-full">
               <div className="relative w-full h-full">
                 <Image

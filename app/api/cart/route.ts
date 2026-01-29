@@ -1,6 +1,6 @@
 // app/api/cart/route.ts - WITH CLERK AUTH
 import { NextRequest, NextResponse } from "next/server";
-import { clearCart, getCart, saveCart } from "@/app/lib/cart";
+import { clearCart, getCart } from "@/app/lib/cart";
 import { currentUser } from "@clerk/nextjs/server";
 
 export async function GET(request: NextRequest) {

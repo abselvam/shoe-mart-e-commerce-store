@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, X, Plus, Minus } from "lucide-react";
+import { ShoppingBag, X, Plus, Minus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/app/store/cartStore";
@@ -60,11 +60,11 @@ export function CartSheet() {
 
         setTotalPrice(priceTotal);
         // Update Zustand store after calculating count
-        useCartStore.getState().setTotalItems(itemsCount);
+        // useCartStore.getState().setTotalItems(itemsCount);
       } else if (response.status === 401) {
         // User not logged in
         setCart({ items: [] });
-        useCartStore.getState().setTotalItems(0);
+        // useCartStore.getState().setTotalItems(0);
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -254,7 +254,7 @@ export function CartSheet() {
                               onClick={() => handleRemoveItem(item.id)}
                               className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-accent rounded"
                             >
-                              <X className="h-4 w-4 text-muted-foreground" />
+                              <Trash2 className="h-4 w-4 text-red-400 hover:cursor-pointer" />
                             </button>
                           </div>
 
