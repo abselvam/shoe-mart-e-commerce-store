@@ -3,6 +3,8 @@
 import { useCartStore } from "@/app/store/cartStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -40,6 +42,8 @@ function ProductClientView({ productId }: Props) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
   const itemCount = useCartStore((state) => state.fetchCartCount);
+
+  const { user } = useUser();
 
   async function fetchProduct() {
     try {
@@ -184,21 +188,30 @@ function ProductClientView({ productId }: Props) {
               </div>
             </CardContent>
             <div className="flex flex-col justify-end gap-4 h-full px-10 py-2">
-              <Button
-                className="w-full py-6 text-lg bg-secondary-foreground hover:bg-secondary-foreground/80"
-                onClick={handleAddToCart}
-                disabled={addingToCart}
-              >
-                {addingToCart ? (
-                  "Adding..."
-                ) : (
-                  <>
-                    Add to Bag {/* Show count even before clicking */}
+              {!user ? (
+                <SignInButton>
+                  <Button>
+                    Add to Bag
                     <ShoppingBag className="text-primary-foreground ml-4" />
-                  </>
-                )}
-              </Button>
-              <Button className="w-full py-6 text-lg">Buy Now</Button>
+                  </Button>
+                </SignInButton>
+              ) : (
+                <Button
+                  className="w-full py-6 text-lg bg-secondary-foreground hover:bg-secondary-foreground/80"
+                  onClick={handleAddToCart}
+                  disabled={addingToCart}
+                >
+                  {addingToCart ? (
+                    "Adding..."
+                  ) : (
+                    <>
+                      Add to Bag
+                      <ShoppingBag className="text-primary-foreground ml-4" />
+                    </>
+                  )}
+                </Button>
+              )}
+              {/* <Button className="w-full py-6 text-lg">Buy Now</Button> */}
             </div>
           </Card>
         </div>
